@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { getMnemonic, getSolanaWallet } from "@/actions/getWallet";
 import { RiArrowDropDownFill } from "react-icons/ri";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "react-toastify";
 
 interface Wallet {
   publicKey: string;
@@ -67,6 +69,7 @@ export default function Home() {
               if (obj !== null) {
                 setWallets((prev) => [...prev, obj]);
                 setVisibility((prev) => [...prev, { p1: true, p2: true }]);
+                toast.success("Wallet added successfully");
               }
             }}
             className="bg-white text-black px-6  ml-5 py-3 rounded-md hover:bg-slate-100"
@@ -107,99 +110,116 @@ export default function Home() {
         <div className="mt-7">
           <div className="flex justify-between">
             <h1 className="text-4xl font-semibold">Vault</h1>
-            <button className="px-3 py-2 bg-red-600 hover:bg-red-700 rounded-md">
+            <button
+              onClick={() => {
+                setWallets([]);
+                setVisibility([]);
+                toast.success("Wallets cleared successfully");
+              }}
+              className="px-3 py-2 bg-red-600 hover:bg-red-700 rounded-md"
+            >
               Clear Wallets
             </button>
           </div>
-          <div className="flex flex-wrap"></div>
-          {wallets.map((w, i) => (
-            <div key={i}>
-              <div className="my-6 p-5 bg-slate-800 rounded-md">
-                <h1 className="text-2xl font-semibold">Wallet {i + 1}</h1>
-                <p>Public Key: {w.publicKey}</p>
-                <div>
-                  Private Key:
-                  <div className="flex justify-between">
-                    <input
-                      readOnly
-                      value={w.privateKey}
-                      type={visibility[i].p1 ? "password" : "text"}
-                      className="text-slate-300 bg-transparent w-4/5"
-                    />
-                    {visibility[i].p1 ? (
-                      <FaRegEye
-                        onClick={() =>
-                          setVisibility((prev) => {
-                            const newVis = [...prev];
-                            newVis[i] = {
-                              ...newVis[i],
-                              p1: !newVis[i].p1,
-                            };
-                            return newVis;
-                          })
-                        }
-                        className="text-xl"
+          <AnimatePresence>
+            {wallets.map((w, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="my-6 p-5 bg-slate-800 rounded-md">
+                  <h1 className="text-2xl font-semibold">Wallet {i + 1}</h1>
+                  <div>
+                    Public Key:
+                    <div className="text-slate-300">{w.publicKey}</div>
+                  </div>
+                  <div>
+                    Private Key:
+                    <div className="flex justify-between">
+                      <input
+                        readOnly
+                        value={w.privateKey}
+                        type={visibility[i].p1 ? "password" : "text"}
+                        className="text-slate-300 bg-transparent w-4/5"
                       />
-                    ) : (
-                      <FaRegEyeSlash
-                        onClick={() =>
-                          setVisibility((prev) => {
-                            const newVis = [...prev];
-                            newVis[i] = {
-                              ...newVis[i],
-                              p1: !newVis[i].p1,
-                            };
-                            return newVis;
-                          })
-                        }
-                        className="text-xl"
+                      {visibility[i].p1 ? (
+                        <FaRegEye
+                          onClick={() =>
+                            setVisibility((prev) => {
+                              const newVis = [...prev];
+                              newVis[i] = {
+                                ...newVis[i],
+                                p1: !newVis[i].p1,
+                              };
+                              return newVis;
+                            })
+                          }
+                          className="text-xl"
+                        />
+                      ) : (
+                        <FaRegEyeSlash
+                          onClick={() =>
+                            setVisibility((prev) => {
+                              const newVis = [...prev];
+                              newVis[i] = {
+                                ...newVis[i],
+                                p1: !newVis[i].p1,
+                              };
+                              return newVis;
+                            })
+                          }
+                          className="text-xl"
+                        />
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    Seed Key:
+                    <div className="flex justify-between">
+                      <input
+                        readOnly
+                        value={w.seed}
+                        type={visibility[i].p2 ? "password" : "text"}
+                        className="text-slate-300 bg-transparent w-4/5"
                       />
-                    )}
+                      {visibility[i].p2 ? (
+                        <FaRegEye
+                          onClick={() =>
+                            setVisibility((prev) => {
+                              const newVis = [...prev];
+                              newVis[i] = {
+                                ...newVis[i],
+                                p2: !newVis[i].p2,
+                              };
+                              return newVis;
+                            })
+                          }
+                          className="text-xl"
+                        />
+                      ) : (
+                        <FaRegEyeSlash
+                          onClick={() =>
+                            setVisibility((prev) => {
+                              const newVis = [...prev];
+                              newVis[i] = {
+                                ...newVis[i],
+                                p2: !newVis[i].p2,
+                              };
+                              return newVis;
+                            })
+                          }
+                          className="text-xl"
+                        />
+                      )}
+                    </div>
                   </div>
                 </div>
-                <div>
-                  Seed Key:
-                  <div className="flex justify-between">
-                    <input
-                      readOnly
-                      value={w.seed}
-                      type={visibility[i].p2 ? "password" : "text"}
-                      className="text-slate-300 bg-transparent w-4/5"
-                    />
-                    {visibility[i].p2 ? (
-                      <FaRegEye
-                        onClick={() =>
-                          setVisibility((prev) => {
-                            const newVis = [...prev];
-                            newVis[i] = {
-                              ...newVis[i],
-                              p2: !newVis[i].p2,
-                            };
-                            return newVis;
-                          })
-                        }
-                        className="text-xl"
-                      />
-                    ) : (
-                      <FaRegEyeSlash
-                        onClick={() =>
-                          setVisibility((prev) => {
-                            const newVis = [...prev];
-                            newVis[i] = {
-                              ...newVis[i],
-                              p2: !newVis[i].p2,
-                            };
-                            return newVis;
-                          })
-                        }
-                        className="text-xl"
-                      />
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
       </div>
     </div>
