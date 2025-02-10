@@ -1,3 +1,4 @@
+'use client'
 
 import { generateMnemonic, mnemonicToSeedSync } from "bip39"
 import nacl from "tweetnacl";
@@ -12,13 +13,16 @@ export function getMnemonic() {
     if (mnemonic === '') mnemonic = generateMnemonic();
     return mnemonic;
 }
-export function getSeed() {
+export function getSeed(temp:string='') {
+    if(temp!=='')return seed=mnemonicToSeedSync(temp);
     if (mnemonic === '') mnemonic = getMnemonic();
     return seed = mnemonicToSeedSync(mnemonic);
 }
-export function getSolanaWallet() {
+export function getSolanaWallet(temp: string = '') {
 
-    if (seed.length === 0) { return undefined; }
+    if (seed.length === 0) {
+        getSeed(temp);
+    }
     const path = `m/44'/501'/${walletVal++}'/0'`; // Derivation path for Solana
 
     const derivedSeed = derivePath(path, seed.toString("hex")).key;
