@@ -2,11 +2,18 @@
 import { useEffect, useState } from "react";
 import { getMnemonic, getSolanaWallet } from "@/actions/getWallet";
 import { RiArrowDropDownFill } from "react-icons/ri";
+
+interface Wallet{
+  publicKey: string,
+  secretKey: Buffer,
+  seed: Buffer
+}
 export default function Home() {
   //generate mnemonic if not generated already
   const [isShow, setIsShow] = useState(false);
   const [mnem, setMnem] = useState<string[]>([]);
   const [tempVal, setTempVal] = useState<string>("");
+  const [wallets,setWallets] = useState<Wallet[]>([]);
   const handleShow = () => {
     setIsShow((prev) => !prev);
   };
