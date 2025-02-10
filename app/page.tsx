@@ -1,21 +1,22 @@
 "use client";
-import { useState } from "react";
-import { getMnemonic } from "@/actions/getWallet";
+import { useEffect, useState } from "react";
+import { getMnemonic, getSolanaWallet } from "@/actions/getWallet";
 import { RiArrowDropDownFill } from "react-icons/ri";
 export default function Home() {
   //generate mnemonic if not generated already
   const [isShow, setIsShow] = useState(false);
   const [mnem, setMnem] = useState<string[]>([]);
+  const [tempVal, setTempVal] = useState<string>("");
   const handleShow = () => {
     setIsShow((prev) => !prev);
   };
-
-  const showPneumonic = () => {
-    if (mnem.length !== 0) return true;
-    const mnemonic = getMnemonic();
-    setMnem(mnemonic.split(" "));
-    return true;
-  };
+  useEffect(() => {
+    const showPneumonic = () => {
+      const mnemonic = getMnemonic();
+      setMnem(mnemonic.split(" "));
+    };
+    showPneumonic();
+  }, []);
 
   return (
     <div className="bg-black flex items-center justify-center w-[100vw] h-[100vh]">
@@ -31,8 +32,30 @@ export default function Home() {
             type="text"
             placeholder="Enter your secret phase or leave blank to generate"
             className=" border rounded-md border-slate-400 w-4/5 bg-inherit  p-3"
+            value={tempVal}
+            onChange={(e) => setTempVal(e.target.value)}
           />
-          <button className="bg-white text-black px-6  ml-5 py-3 rounded-md hover:bg-slate-100">
+          <button
+            onClick={() => {
+              if (tempVal !== "" && tempVal.split(" ").length !== 12) {
+                setTempVal("Invalid seed phrase.");
+              }
+              // either do it in three steps, get mnemonic if not given
+              // generate seed string
+              // generate wallet
+              let str = "";
+              if (tempVal === "") {
+                if (mnem.length > 0) str = mnem.join(" ");
+                else {
+                  str = getMnemonic();
+                }
+              }
+              setMnem(str.split(" "));
+              const obj = getSolanaWallet(str);
+              console.log(obj);
+            }}
+            className="bg-white text-black px-6  ml-5 py-3 rounded-md hover:bg-slate-100"
+          >
             Generate Wallet
           </button>
         </div>
@@ -55,15 +78,14 @@ export default function Home() {
             }`}
           >
             <div className="flex flex-wrap p-3">
-              {showPneumonic() &&
-                mnem.map((m, i) => (
-                  <div
-                    key={i}
-                    className="bg-slate-400 text-white px-3 py-1 m-1 rounded-md"
-                  >
-                    {m}
-                  </div>
-                ))}
+              {mnem.map((m, i) => (
+                <div
+                  key={i}
+                  className="bg-slate-400 text-white px-3 py-1 m-1 rounded-md"
+                >
+                  {m}
+                </div>
+              ))}
             </div>
           </div>
         </div>
