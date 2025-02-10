@@ -2,18 +2,22 @@
 import { useEffect, useState } from "react";
 import { getMnemonic, getSolanaWallet } from "@/actions/getWallet";
 import { RiArrowDropDownFill } from "react-icons/ri";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
-interface Wallet{
-  publicKey: string,
-  secretKey: Buffer,
-  seed: Buffer
+interface Wallet {
+  publicKey: string;
+  privateKey: string;
+  seed: string;
 }
 export default function Home() {
   //generate mnemonic if not generated already
   const [isShow, setIsShow] = useState(false);
   const [mnem, setMnem] = useState<string[]>([]);
   const [tempVal, setTempVal] = useState<string>("");
-  const [wallets,setWallets] = useState<Wallet[]>([]);
+  const [wallets, setWallets] = useState<Wallet[]>([]);
+  const [isP1, setIsP1] = useState(true);
+  const [isP2, setIsP2] = useState(true);
+
   const handleShow = () => {
     setIsShow((prev) => !prev);
   };
@@ -26,7 +30,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="bg-black flex items-center justify-center w-[100vw] h-[100vh]">
+    <div className="flex items-center justify-center w-[100vw] h-[100vh]">
       <div className="w-3/5 h-3/5 text-white">
         <div>
           <h1 className="text-6xl font-bold">Wallet Generator</h1>
@@ -59,7 +63,9 @@ export default function Home() {
               }
               setMnem(str.split(" "));
               const obj = getSolanaWallet(str);
-              console.log(obj);
+              if (obj !== null) {
+                setWallets((prev) => [...prev, obj]);
+              }
             }}
             className="bg-white text-black px-6  ml-5 py-3 rounded-md hover:bg-slate-100"
           >
@@ -95,6 +101,67 @@ export default function Home() {
               ))}
             </div>
           </div>
+        </div>
+        <div className="mt-7">
+          <div className="flex justify-between">
+            <h1 className="text-4xl font-semibold">Vault</h1>
+            <button className="px-3 py-2 bg-red-600 hover:bg-red-700 rounded-md">
+              Clear Wallets
+            </button>
+          </div>
+          <div className="flex flex-wrap"></div>
+          {wallets.map((w, i) => (
+            <div key={i}>
+              <div className="p-3 border border-slate-400 rounded-md">
+                <h1 className="text-2xl font-semibold">Wallet {i + 1}</h1>
+                <p>Public Key: {w.publicKey}</p>
+                <div>
+                  Private Key:
+                  <div className="flex justify-between">
+                    <input
+                      readOnly
+                      value={w.privateKey}
+                      type={isP1 ? "password" : "text"}
+                      className="text-slate-300 bg-transparent w-4/5"
+                    />
+                    {isP1 ? (
+                      <FaRegEye
+                        onClick={() => setIsP1((prev) => !prev)}
+                        className="text-xl"
+                      />
+                    ) : (
+                      <FaRegEyeSlash
+                        onClick={() => setIsP1((prev) => !prev)}
+                        className="text-xl"
+                      />
+                    )}
+                  </div>
+                </div>
+                <div>
+                  Seed Key:
+                  <div className="flex justify-between">
+                    <input
+                      readOnly
+                      value={w.seed}
+                      type={isP2 ? "password" : "text"}
+                      className="text-slate-300 bg-transparent w-4/5"
+                    />
+                    {isP2 ? (
+                      <FaRegEye
+                        onClick={() => setIsP2((prev) => !prev)}
+                        className="text-xl"
+                      />
+                    ) : (
+                      <FaRegEyeSlash
+                        onClick={() => setIsP2((prev) => !prev)}
+                        className="text-xl"
+                      />
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

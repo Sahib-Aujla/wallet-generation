@@ -4,6 +4,7 @@ import { generateMnemonic, mnemonicToSeedSync } from "bip39"
 import nacl from "tweetnacl";
 import { derivePath } from "ed25519-hd-key";
 import { Keypair } from "@solana/web3.js";
+import bs58 from 'bs58'
 
 let walletVal = 0;
 
@@ -27,6 +28,6 @@ export function getSolanaWallet(temp: string) {
     const derivedSeed = derivePath(path, seed.toString("hex")).key;
     const secret = nacl.sign.keyPair.fromSeed(derivedSeed).secretKey;
     //console.log(Keypair.fromSecretKey(secret).publicKey.toBase58());
-    return { priavateKey: Keypair.fromSecretKey(secret).secretKey, publicKey: Keypair.fromSecretKey(secret).publicKey.toBase58(), seed: seed };
+    return { privateKey: bs58.encode(Keypair.fromSecretKey(secret).secretKey), publicKey: Keypair.fromSecretKey(secret).publicKey.toBase58(), seed: bs58.encode(seed) };
 
 }
