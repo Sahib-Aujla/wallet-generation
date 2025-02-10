@@ -15,8 +15,9 @@ export default function Home() {
   const [mnem, setMnem] = useState<string[]>([]);
   const [tempVal, setTempVal] = useState<string>("");
   const [wallets, setWallets] = useState<Wallet[]>([]);
-  const [isP1, setIsP1] = useState(true);
-  const [isP2, setIsP2] = useState(true);
+  const [visibility, setVisibility] = useState<{ p1: boolean; p2: boolean }[]>(
+    []
+  );
 
   const handleShow = () => {
     setIsShow((prev) => !prev);
@@ -65,6 +66,7 @@ export default function Home() {
               const obj = getSolanaWallet(str);
               if (obj !== null) {
                 setWallets((prev) => [...prev, obj]);
+                setVisibility((prev) => [...prev, { p1: true, p2: true }]);
               }
             }}
             className="bg-white text-black px-6  ml-5 py-3 rounded-md hover:bg-slate-100"
@@ -112,7 +114,7 @@ export default function Home() {
           <div className="flex flex-wrap"></div>
           {wallets.map((w, i) => (
             <div key={i}>
-              <div className="p-3 border border-slate-400 rounded-md">
+              <div className="my-6 p-5 bg-slate-800 rounded-md">
                 <h1 className="text-2xl font-semibold">Wallet {i + 1}</h1>
                 <p>Public Key: {w.publicKey}</p>
                 <div>
@@ -121,17 +123,35 @@ export default function Home() {
                     <input
                       readOnly
                       value={w.privateKey}
-                      type={isP1 ? "password" : "text"}
+                      type={visibility[i].p1 ? "password" : "text"}
                       className="text-slate-300 bg-transparent w-4/5"
                     />
-                    {isP1 ? (
+                    {visibility[i].p1 ? (
                       <FaRegEye
-                        onClick={() => setIsP1((prev) => !prev)}
+                        onClick={() =>
+                          setVisibility((prev) => {
+                            const newVis = [...prev];
+                            newVis[i] = {
+                              ...newVis[i],
+                              p1: !newVis[i].p1,
+                            };
+                            return newVis;
+                          })
+                        }
                         className="text-xl"
                       />
                     ) : (
                       <FaRegEyeSlash
-                        onClick={() => setIsP1((prev) => !prev)}
+                        onClick={() =>
+                          setVisibility((prev) => {
+                            const newVis = [...prev];
+                            newVis[i] = {
+                              ...newVis[i],
+                              p1: !newVis[i].p1,
+                            };
+                            return newVis;
+                          })
+                        }
                         className="text-xl"
                       />
                     )}
@@ -143,17 +163,35 @@ export default function Home() {
                     <input
                       readOnly
                       value={w.seed}
-                      type={isP2 ? "password" : "text"}
+                      type={visibility[i].p2 ? "password" : "text"}
                       className="text-slate-300 bg-transparent w-4/5"
                     />
-                    {isP2 ? (
+                    {visibility[i].p2 ? (
                       <FaRegEye
-                        onClick={() => setIsP2((prev) => !prev)}
+                        onClick={() =>
+                          setVisibility((prev) => {
+                            const newVis = [...prev];
+                            newVis[i] = {
+                              ...newVis[i],
+                              p2: !newVis[i].p2,
+                            };
+                            return newVis;
+                          })
+                        }
                         className="text-xl"
                       />
                     ) : (
                       <FaRegEyeSlash
-                        onClick={() => setIsP2((prev) => !prev)}
+                        onClick={() =>
+                          setVisibility((prev) => {
+                            const newVis = [...prev];
+                            newVis[i] = {
+                              ...newVis[i],
+                              p2: !newVis[i].p2,
+                            };
+                            return newVis;
+                          })
+                        }
                         className="text-xl"
                       />
                     )}
