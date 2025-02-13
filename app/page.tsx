@@ -84,14 +84,14 @@ export default function Home() {
               <RiArrowDropDownFill
                 onClick={handleShow}
                 className={`text-4xl cursor-pointer 
-                          transform ease-in-out transition-transform duration-300 
+                          transform ease-in-out transition-transform duration-500 
                           ${isShow ? "rotate-180" : ""}`}
               />
             </div>
           </div>
 
           <div
-            className={`overflow-hidden transition-all duration-300 ease-in-out ${
+            className={`overflow-hidden transition-all duration-500 ease-in-out ${
               isShow ? "max-h-96" : "max-h-0"
             }`}
           >
