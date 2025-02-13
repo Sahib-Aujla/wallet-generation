@@ -95,11 +95,11 @@ export default function Home() {
               isShow ? "max-h-96" : "max-h-0"
             }`}
           >
-            <div className="flex flex-wrap p-3">
+            <div className="flex flex-wrap p-3 gap-2 justify-between">
               {mnem.map((m, i) => (
                 <div
                   key={i}
-                  className="bg-slate-400 text-white px-3 py-1 m-1 rounded-md"
+                  className="bg-slate-600 w-1/4 text-white px-3 py-1 m-1 rounded-md text-center"
                 >
                   {m}
                 </div>
