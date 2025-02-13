@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { getMnemonic, getSolanaWallet } from "@/actions/getWallet";
 import { RiArrowDropDownFill } from "react-icons/ri";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { IoCopyOutline } from "react-icons/io5";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-toastify";
 
@@ -35,6 +36,16 @@ export default function Home() {
     showPneumonic();
   }, []);
 
+  const handleCopyMnemonic = async () => {
+    try {
+      await navigator.clipboard.writeText(mnem.join(" "));
+      toast.success("Mnemonic copied to clipboard!");
+    } catch (err) {
+      toast.error("Failed to copy mnemonic.");
+      console.log(err);
+    }
+  };
+
   return (
     <div className="flex items-center justify-center w-[100vw] h-[100vh]">
       <div className="w-3/5 h-3/5 text-white">
@@ -48,7 +59,7 @@ export default function Home() {
           <input
             type="text"
             placeholder="Enter your secret phase or leave blank to generate"
-            className=" border rounded-md border-slate-400 w-4/5 bg-inherit  p-3"
+            className="border rounded-md border-slate-400 w-4/5 bg-inherit p-3"
             value={tempVal}
             onChange={(e) => setTempVal(e.target.value)}
           />
@@ -57,9 +68,6 @@ export default function Home() {
               if (tempVal !== "" && tempVal.split(" ").length !== 12) {
                 setTempVal("Invalid seed phrase.");
               }
-              // either do it in three steps, get mnemonic if not given
-              // generate seed string
-              // generate wallet
               let str = "";
               if (tempVal === "") {
                 if (mnem.length > 0) str = mnem.join(" ");
@@ -79,20 +87,21 @@ export default function Home() {
                 toast.success("Wallet added successfully");
               }
             }}
-            className="bg-white text-black px-6  ml-5 py-3 rounded-md hover:bg-slate-100"
+            className="bg-white text-black px-6 ml-5 py-3 rounded-md hover:bg-slate-100"
           >
             Generate Wallet
           </button>
         </div>
-        <div className="border border-slate-400 rounded-md ">
-          <div className="flex justify-between p-3 ">
+        <div className="border border-slate-400 rounded-md">
+          <div className="flex justify-between p-3">
             <h1 className="text-3xl font-semibold">Current Secret Phrase</h1>
-            <div>
+            {/* Copy button + toggle arrow container */}
+            <div className="flex items-center space-x-3">
               <RiArrowDropDownFill
                 onClick={handleShow}
                 className={`text-4xl cursor-pointer
-                           transform ease-in-out transition-transform duration-500
-                           ${isShow ? "rotate-180" : ""}`}
+                  transform ease-in-out transition-transform duration-500
+                  ${isShow ? "rotate-180" : ""}`}
               />
             </div>
           </div>
@@ -106,11 +115,19 @@ export default function Home() {
               {mnem.map((m, i) => (
                 <div
                   key={i}
-                  className="bg-slate-600 w-1/4 text-white px-3 py-1 m-1 rounded-md text-center"
+                  className="bg-slate-600 w-1/4 text-white px-3 py-1 m-1 rounded-md text-center hover:bg-slate-700"
                 >
                   {m}
                 </div>
               ))}
+            </div>
+            <div className="px-5 py-2">
+              <button
+                onClick={handleCopyMnemonic}
+                className="bg-slate-800 flex gap-1 justify-center items-center px-3 py-1 rounded-md hover:bg-slate-900"
+              >
+                <IoCopyOutline /> Copy
+              </button>
             </div>
           </div>
         </div>
