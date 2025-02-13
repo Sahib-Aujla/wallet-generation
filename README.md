@@ -2,6 +2,8 @@
 
 This application replicates and creates solana wallets. It aims at replicating HD wallets to generatet key pairs.
 
+The key pairs generated are real wallets that could be used for transactions on solana blockchain.
+
 Feel free to modify the code for any improvements.
 
 Running the development server:
