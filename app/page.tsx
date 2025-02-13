@@ -157,7 +157,7 @@ export default function Home() {
                               return newVis;
                             })
                           }
-                          className="text-xl"
+                          className="text-xl cursor-pointer"
                         />
                       ) : (
                         <FaRegEyeSlash
@@ -171,7 +171,7 @@ export default function Home() {
                               return newVis;
                             })
                           }
-                          className="text-xl"
+                          className="text-xl cursor-pointer"
                         />
                       )}
                     </div>
@@ -197,7 +197,7 @@ export default function Home() {
                               return newVis;
                             })
                           }
-                          className="text-xl"
+                          className="text-xl cursor-pointer"
                         />
                       ) : (
                         <FaRegEyeSlash
@@ -211,7 +211,7 @@ export default function Home() {
                               return newVis;
                             })
                           }
-                          className="text-xl"
+                          className="text-xl cursor-pointer"
                         />
                       )}
                     </div>
